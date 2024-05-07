@@ -5,4 +5,9 @@ html, body {
 canvas {
   display: block;
 }
-
+html,
+body {
+  user-select: none;
+  touch-action: none;
+  -webkit-user-select: none;
+}
