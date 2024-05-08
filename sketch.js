@@ -46,7 +46,7 @@ function setup() {
     }
   }
 
-  s = max([width, height]) / 1200;
+  s = min([width, height]) / 500;
 
   print(show);
 }
@@ -276,8 +276,8 @@ function create() {
   } else {
     strokeWeight(2);
   }
-  if (incorrect){
-    stroke(255,0,0);
+  if (incorrect) {
+    stroke(255, 0, 0);
   }
   rect(width / 40, (height / 5) * 3, width - width / 20, height / 15, 10);
 
@@ -298,7 +298,8 @@ function create() {
   stroke(255, 0, 0);
   rect(width / 2.4, (height / 5) * 4, width - width / 1.2, height / 15, 10);
   noStroke();
-
+  
+  textSize(s*20);
   fill(255, 0, 0);
   text(
     "SUBMIT",
@@ -307,11 +308,8 @@ function create() {
     width - width / 1.2,
     height / 15
   );
-  if (incorrect){
-    text(
-    "Invalid URL, please try again",
-    width / 2,
-    (height / 5));
+  if (incorrect) {
+    text("Invalid URL, please try again", width / 2, height / 5);
   }
 
   fill(255);
@@ -320,16 +318,14 @@ function create() {
     width / 40,
     (height / 5) * 2,
     width - width / 20,
-    height / 15,
-    10
+    height / 15
   );
   text(
     server.url,
     width / 40,
     (height / 5) * 3,
     width - width / 20,
-    height / 15,
-    10
+    height / 15
   );
 
   if (server.name === "") {
