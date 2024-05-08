@@ -255,6 +255,7 @@ let server = {
   url: "",
   stage: 0,
 };
+let incorrect = false;
 function create() {
   background(17, 13, 29);
 
@@ -264,8 +265,54 @@ function create() {
   textSize(s * 40);
 
   fill(0);
+  if (server.stage === 0) {
+    strokeWeight(10);
+  } else {
+    strokeWeight(2);
+  }
   rect(width / 40, (height / 5) * 2, width - width / 20, height / 15, 10);
+  if (server.stage === 1) {
+    strokeWeight(10);
+  } else {
+    strokeWeight(2);
+  }
+  if (incorrect){
+    stroke(255,0,0);
+  }
   rect(width / 40, (height / 5) * 3, width - width / 20, height / 15, 10);
+
+  if (
+    button(width / 40, (height / 5) * 2, width - width / 20, height / 15) &&
+    mouseIsPressed
+  ) {
+    server.stage = 0;
+  }
+
+  if (
+    button(width / 40, (height / 5) * 3, width - width / 20, height / 15) &&
+    mouseIsPressed
+  ) {
+    server.stage = 1;
+  }
+
+  stroke(255, 0, 0);
+  rect(width / 2.4, (height / 5) * 4, width - width / 1.2, height / 15, 10);
+  noStroke();
+
+  fill(255, 0, 0);
+  text(
+    "SUBMIT",
+    width / 2.4,
+    (height / 5) * 4,
+    width - width / 1.2,
+    height / 15
+  );
+  if (incorrect){
+    text(
+    "Invalid URL, please try again",
+    width / 2,
+    (height / 5));
+  }
 
   fill(255);
   text(
@@ -313,30 +360,39 @@ function create() {
     server.url = type.value();
   }
 
-  if (key === "Enter" && server.stage === 0) {
+  if (
+    key === "Enter" ||
+    (button(width / 2.4, (height / 5) * 4, width - width / 1.2, height / 15) &&
+      mouseIsPressed &&
+      server.stage === 0)
+  ) {
     server.stage = 1;
     type.value("");
   }
 
   if (
-    key === "Enter" &&
-    server.stage === 1 &&
-    server.url.indexOf("https://education.minecraft.net/joinworld/") > -1
+    key === "Enter" ||
+    (button(width / 2.4, (height / 5) * 4, width - width / 1.2, height / 15) &&
+      mouseIsPressed &&
+      server.stage === 1)
   ) {
-    window.open(
-      "https://docs.google.com/forms/d/e/1FAIpQLSfMFMj3Tdk1qvYIIeoJ3CkXI8YVU9UTYpESBHbLxX2uE8AxQw/viewform?usp=pp_url&entry.853013094=" +
-        server.name +
-        "|" +
-        server.url
-    );
-    type.value("");
-    stage = "INFO";
+    if (server.url.indexOf("https://education.minecraft.net/joinworld/") > -1) {
+      window.open(
+        "https://docs.google.com/forms/d/e/1FAIpQLSfMFMj3Tdk1qvYIIeoJ3CkXI8YVU9UTYpESBHbLxX2uE8AxQw/viewform?usp=pp_url&entry.853013094=" +
+          server.name +
+          "|" +
+          server.url
+      );
+      type.value("");
+      stage = "INFO";
+    } else {
+      incorrect = true;
+    }
   }
 }
 
 let stage = "INFO";
 function draw() {
-  textFont("Roboto");
   if (stage === "INFO") {
     showurls();
   }
@@ -350,4 +406,3 @@ function draw() {
     hold = 0;
   }
 }
-
