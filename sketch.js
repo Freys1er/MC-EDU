@@ -9,7 +9,7 @@ function preload() {
   );
   font = loadFont("Font.ttf");
 }
-let servers ;
+let servers;
 let s = 1;
 let font;
 let open = true;
@@ -28,57 +28,57 @@ function setup() {
   //https://docs.google.com/forms/d/e/1FAIpQLSfMFMj3Tdk1qvYIIeoJ3CkXI8YVU9UTYpESBHbLxX2uE8AxQw/viewform?usp=pp_url&entry.853013094=The_Data
 
   servers = {
-    names:[],
-    urls:[],
-    users:[],
-    dates:[],
-    status:[]
+    names: [],
+    urls: [],
+    users: [],
+    dates: [],
+    status: [],
   };
-  
+
   for (let i = 0; i < data.length; i++) {
     let row = {
-      date : data[i][0],
-      user : data[i][1],
-      mode : data[i][2].split("|")[0],
-      info : data[i][2].split("|")[1]
-    }
-    
-    if (row.mode === "RENAME SERVER"){
-      if (servers.users.indexOf(row.user)>-1){
+      date: data[i][0],
+      user: data[i][1],
+      mode: data[i][2].split("|")[0],
+      info: data[i][2].split("|")[1],
+    };
+
+    if (row.mode === "RENAME SERVER") {
+      if (servers.users.indexOf(row.user) > -1) {
         servers.names[servers.users.indexOf(row.user)] = row.info;
         servers.dates[servers.users.indexOf(row.user)].push([row.date]);
-        servers.status[servers.users.indexOf(row.user)].push(['RENAME']);
-      }else{
+        servers.status[servers.users.indexOf(row.user)].push(["RENAME"]);
+      } else {
         servers.names.push(row.info);
         servers.urls.push("");
         servers.users.push(row.user);
         servers.dates.push([row.date]);
-        servers.status.push(['RENAME']);
+        servers.status.push(["RENAME"]);
       }
     }
-    if (row.mode === "ENTER URL"){
-      if (servers.users.indexOf(row.user)>-1){
+    if (row.mode === "ENTER URL") {
+      if (servers.users.indexOf(row.user) > -1) {
         servers.urls[servers.users.indexOf(row.user)] = row.info;
         servers.dates[servers.users.indexOf(row.user)].push(row.date);
-        servers.status[servers.users.indexOf(row.user)].push(['START']);
-      }else{
+        servers.status[servers.users.indexOf(row.user)].push(["START"]);
+      } else {
         servers.names.push("");
         servers.urls.push(row.url);
         servers.users.push(row.user);
         servers.dates.push([row.date]);
-        servers.status.push('START');
+        servers.status.push("START");
       }
     }
-    if (row.mode === "STOP SERVER"){
-      if (servers.users.indexOf(row.user)>-1){
+    if (row.mode === "STOP SERVER") {
+      if (servers.users.indexOf(row.user) > -1) {
         servers.dates[servers.users.indexOf(row.user)].push(row.date);
-        servers.status[servers.users.indexOf(row.user)].push(['STOP']);
-      }else{
+        servers.status[servers.users.indexOf(row.user)].push(["STOP"]);
+      } else {
         servers.names.push("");
         servers.urls.push(row.url);
         servers.users.push(row.user);
         servers.data.push([row.date]);
-        servers.status.push('STOP');
+        servers.status.push("STOP");
       }
     }
   }
@@ -128,103 +128,115 @@ let setting = "";
 function showurls() {
   background(41, 30, 21);
   fill(255);
-  textAlign(CENTER,CENTER);
-  textSize(s*22);
-  text("Multiplayer Servers",width/2,height/14);
+  textAlign(CENTER, CENTER);
+  textSize(s * 22);
+  text("Multiplayer Servers", width / 2, height / 14);
 
   fill(20, 15, 10);
   rect(0, height / 10, width, height - height / 4);
 
-  
   //Controls
-  if (choosen.length>1) {
+  if (choosen.length > 1) {
     fill(70);
     stroke(200, 255, 200);
     strokeWeight(8);
-    rect(width / 20, height - height / 9, width - width/10, height / 13);
+    rect(width / 20, height - height / 9, width - width / 10, height / 13);
 
     noStroke();
     fill(255);
     textSize(s * 22);
     textAlign(CENTER, CENTER);
-    text("JOIN", width / 20, height - height / 9, width - width/10, height / 13);
+    text(
+      "JOIN",
+      width / 20,
+      height - height / 9,
+      width - width / 10,
+      height / 13
+    );
     fill(255, 0, 0);
     if (
       button(width / 20, height - height / 9, width / 2.5, height / 13) &&
       mouseIsPressed
     ) {
       window.open(servers.urls[servers.users.indexOf(choosen)]);
-      
+
       open = false;
     }
   } else {
     fill(70);
     stroke(100, 255, 100);
     strokeWeight(5);
-    rect(width / 20, height - height/9, width/4, height / 13);
-    stroke(150,150,255);
-    rect(width / 20 + width/3, height - height/9, width/4, height / 13);
-    stroke(255,100,100);
-    rect(width / 20 + width/3*2, height - height/9, width/4, height / 13);
+    rect(width / 20, height - height / 9, width / 4, height / 13);
+    stroke(150, 150, 255);
+    rect(width / 20 + width / 3, height - height / 9, width / 4, height / 13);
+    stroke(255, 100, 100);
+    rect(
+      width / 20 + (width / 3) * 2,
+      height - height / 9,
+      width / 4,
+      height / 13
+    );
 
     noStroke();
     fill(255);
     textSize(s * 20);
     textAlign(CENTER, CENTER);
-    text(
-      "NAME",
-      width / 20,
-      height - height / 9,
-      width/4,
-      height / 13
-    );
+    text("NAME", width / 20, height - height / 9, width / 4, height / 13);
     text(
       "URL",
-      width / 20 + width/3,
+      width / 20 + width / 3,
       height - height / 9,
-      width/4,
+      width / 4,
       height / 13
     );
     text(
       "STOP",
-      width / 20 + width/3*2,
+      width / 20 + (width / 3) * 2,
       height - height / 9,
-      width/4,
+      width / 4,
       height / 13
     );
-    
-    
+
     if (
-      button(width / 20, height - height / 9, width/4, height / 13
-      ) &&
-      mouseIsPressed && open
+      button(width / 20, height - height / 9, width / 4, height / 13) &&
+      mouseIsPressed &&
+      open
     ) {
       stage = "ADMIN";
-      setting = "RENAME SERVER"
+      setting = "RENAME SERVER";
     }
     if (
-      button(width / 20 + width/3, height - height / 9, width/4, height / 13
+      button(
+        width / 20 + width / 3,
+        height - height / 9,
+        width / 4,
+        height / 13
       ) &&
-      mouseIsPressed && open
+      mouseIsPressed &&
+      open
     ) {
       stage = "ADMIN";
-      setting = "ENTER URL"
+      setting = "ENTER URL";
     }
     if (
-      button(width / 20 + width/3*2, height - height / 9, width/4, height / 13
+      button(
+        width / 20 + (width / 3) * 2,
+        height - height / 9,
+        width / 4,
+        height / 13
       ) &&
-      mouseIsPressed && open
+      mouseIsPressed &&
+      open
     ) {
       stage = "ADMIN";
-      setting = "STOP SERVER"
+      setting = "STOP SERVER";
     }
-    
-    if (!mouseIsPressed){
+
+    if (!mouseIsPressed) {
       open = true;
     }
   }
-  
-  
+
   push();
   if (scroll > 0) {
     scroll = 0;
@@ -237,13 +249,25 @@ function showurls() {
   textSize(35);
   textAlign(CENTER, CENTER);
   textStyle(BOLD);
-  for (let i = 0; i < servers.names.length; i++) {
+  for (let i = 0; i < servers.users.length; i++) {
     fill(0);
     stroke(255);
     if (choosen === servers.users[i]) {
-      strokeWeight(7);
+      strokeWeight(10);
     } else {
-      strokeWeight(2);
+      strokeWeight(3);
+    }
+    for (let j = 0; j < servers.dates[i].length; j++) {
+      message = servers.status[i][j];
+      if (message.indexOf("RENAME") > -1) {
+        stroke(0, 0, 200);
+      }
+      if (message.indexOf("START") > -1) {
+        stroke(0, 200, 0);
+      }
+      if (message.indexOf("STOP") > -1) {
+        stroke(200, 0, 0);
+      }
     }
     rect(width / 40, height / 5 + (i * height) / 6, width * 0.95, height / 7);
 
@@ -254,11 +278,7 @@ function showurls() {
     text(servers.names[i], width / 24, height / 4.7 + (i * height) / 6);
     textSize(s * 15);
     fill(150);
-    text(
-      servers.users[i],
-      width / 24,
-      height / 3.3 + (i * height) / 6
-    );
+    text(servers.users[i], width / 24, height / 3.3 + (i * height) / 6);
 
     textSize(s * 22);
     fill(255);
@@ -268,43 +288,62 @@ function showurls() {
         height / 5 + (i * height) / 6,
         width * 0.95,
         height / 8
-      )
+      ) &&
+      mouseIsPressed
     ) {
-      if (mouseIsPressed) {
-        choosen = servers.users[i];
-        information=height-height/3.5-servers.dates[servers.users.indexOf(choosen)].length*height/20;
-      }
+      choosen = servers.users[i];
+      information =
+        height -
+        height / 3.5 -
+        (servers.dates[servers.users.indexOf(choosen)].length * height) / 20;
     } else if (mouseIsPressed) {
       choosen = {};
     }
   }
   pop();
   type.hide();
-  
-  if (choosen.length>1){
-    fill(0,0,0,240);
+
+  if (choosen.length > 1) {
+    fill(0, 0, 0, 240);
     noStroke();
-    rect(width/10,height/10,width-width/5,height-height/4,30);
-    
-    textSize(s*20);
-    textAlign(LEFT,TOP);
+    rect(width / 10, height / 10, width - width / 5, height - height / 4, 30);
+
+    textSize(s * 20);
+    textAlign(LEFT, TOP);
     let message = "SERVER START";
-    for (let i = 0;i<servers.dates[servers.users.indexOf(choosen)].length;i++){
+    for (
+      let i = 0;
+      i < servers.dates[servers.users.indexOf(choosen)].length;
+      i++
+    ) {
       message = servers.status[servers.users.indexOf(choosen)][i];
-      if (message.indexOf('RENAME')>-1){
-        fill(0,0,200);
+      if (message.indexOf("RENAME") > -1) {
+        fill(0, 0, 200);
       }
-      if (message.indexOf('START')>-1){
-        fill(0,200,0);
+      if (message.indexOf("START") > -1) {
+        fill(0, 200, 0);
       }
-      if (message.indexOf('STOP')>-1){
-        fill(200,0,0);
+      if (message.indexOf("STOP") > -1) {
+        fill(200, 0, 0);
       }
-      text(message+"\t\t-\t\t"+servers.dates[servers.users.indexOf(choosen)][i],width/9,height/9+i*height/20+information);
+      text(message, width / 9, height / 9 + (i * height) / 20 + information);
+      text(
+        servers.dates[servers.users.indexOf(choosen)][i],
+        width / 3,
+        height / 9 + (i * height) / 20 + information
+      );
     }
-    
-    if (information<height-height/3.5-servers.dates[servers.users.indexOf(choosen)].length*height/20){
-      information=height-height/3.5-servers.dates[servers.users.indexOf(choosen)].length*height/20;
+
+    if (
+      information >
+      height -
+        height / 3.5 -
+        (servers.dates[servers.users.indexOf(choosen)].length * height) / 20
+    ) {
+      information =
+        height -
+        height / 3.5 -
+        (servers.dates[servers.users.indexOf(choosen)].length * height) / 20;
     }
   }
 }
@@ -329,10 +368,10 @@ function create(setting) {
   if (incorrect) {
     stroke(255, 0, 0);
   }
-  if (button(width / 40, (height / 2), width - width / 20, height / 15)){
-    strokeWeight(10);    
+  if (button(width / 40, height / 2, width - width / 20, height / 15)) {
+    strokeWeight(10);
   }
-  rect(width / 40, (height / 2), width - width / 20, height / 15, 10);
+  rect(width / 40, height / 2, width - width / 20, height / 15, 10);
 
   stroke(255, 0, 0);
   rect(width / 2.4, (height / 5) * 4, width - width / 1.2, height / 15, 10);
@@ -350,28 +389,20 @@ function create(setting) {
   if (incorrect) {
     text("Invalid URL, please try again", width / 2, height / 5);
   }
-  
-  if (setting === "STOP SERVER"){
-    type.value('');
+
+  if (setting === "STOP SERVER") {
+    type.value("");
   }
 
   fill(255);
-  
 
   if (type.value() === "") {
-    text(
-      setting,
-      width / 40,
-      (height / 2),
-      width - width / 20,
-      height / 15,
-      10
-    );
-  }else{
+    text(setting, width / 40, height / 2, width - width / 20, height / 15, 10);
+  } else {
     text(
       type.value(),
       width / 40,
-      (height / 2),
+      height / 2,
       width - width / 20,
       height / 15,
       10
@@ -385,7 +416,12 @@ function create(setting) {
     (button(width / 2.4, (height / 5) * 4, width - width / 1.2, height / 15) &&
       mouseIsPressed)
   ) {
-    if ((setting === "ENTER URL" && type.value().indexOf("https://education.minecraft.net/joinworld/") > -1) || setting !== "ENTER URL") {
+    if (
+      (setting === "ENTER URL" &&
+        type.value().indexOf("https://education.minecraft.net/joinworld/") >
+          -1) ||
+      setting !== "ENTER URL"
+    ) {
       window.location.replace(
         "https://docs.google.com/forms/d/e/1FAIpQLSfMFMj3Tdk1qvYIIeoJ3CkXI8YVU9UTYpESBHbLxX2uE8AxQw/viewform?usp=pp_url&entry.853013094=" +
           setting +
