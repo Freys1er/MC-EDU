@@ -272,6 +272,7 @@ function showurls() {
     ) {
       if (mouseIsPressed) {
         choosen = servers.users[i];
+        information=height-height/4-servers.dates[servers.users.indexOf(choosen)].length*height/20;
       }
     } else if (mouseIsPressed) {
       choosen = {};
@@ -305,8 +306,6 @@ function showurls() {
     if (information>height-height/4-servers.dates[servers.users.indexOf(choosen)].length*height/20){
       information=height-height/4-servers.dates[servers.users.indexOf(choosen)].length*height/20;
     }
-  }else{
-    information=height-height/4-servers.dates[servers.users.indexOf(choosen)].length*height/20;
   }
 }
 function button(x, y, w, h) {
