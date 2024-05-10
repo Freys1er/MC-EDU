@@ -88,6 +88,8 @@ function setup() {
   print(servers);
 }
 function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+
   type.size(width - 10, height - 10);
   type.position(0, 0);
   type.style("background-color", color(0, 0, 0, 0));
@@ -123,22 +125,20 @@ function formatMilliseconds(milliseconds) {
 }
 
 let choosen = [];
-let setting = "";
+let setting = "ENTER URL";
 
 function showurls() {
   background(41, 30, 21);
   fill(255);
   textAlign(CENTER, CENTER);
-  textSize(s * 22);
-  text("Multiplayer Servers", width / 2, height / 14);
 
   fill(20, 15, 10);
-  rect(0, height / 10, width, height - height / 4);
+  rect(0, height / 6, width, height - height / 5);
 
   //Controls
   if (choosen.length > 1) {
     fill(70);
-    stroke(200, 255, 200);
+    stroke(150, 255, 150);
     strokeWeight(8);
     rect(width / 20, height - height / 9, width - width / 10, height / 13);
 
@@ -155,88 +155,39 @@ function showurls() {
     );
     fill(255, 0, 0);
     if (
-      button(width / 20, height - height / 9, width / 2.5, height / 13) &&
-      mouseIsPressed
+      button(
+        width / 20,
+        height - height / 9,
+        width - width / 10,
+        height / 13
+      ) &&
+      mouseIsPressed &&
+      open
     ) {
       window.open(servers.urls[servers.users.indexOf(choosen)]);
-
       open = false;
+    }
+    if (!mouseIsPressed){
+      open=true;
     }
   } else {
     fill(70);
-    stroke(100, 255, 100);
-    strokeWeight(5);
-    rect(width / 20, height - height / 9, width / 4, height / 13);
-    stroke(150, 150, 255);
-    rect(width / 20 + width / 3, height - height / 9, width / 4, height / 13);
-    stroke(255, 100, 100);
-    rect(
-      width / 20 + (width / 3) * 2,
-      height - height / 9,
-      width / 4,
-      height / 13
-    );
+    stroke(100);
+    strokeWeight(8);
+    rect(width / 20, height - height / 9, width - width / 10, height / 13);
 
     noStroke();
     fill(255);
-    textSize(s * 20);
+    textSize(s * 22);
     textAlign(CENTER, CENTER);
-    text("NAME", width / 20, height - height / 9, width / 4, height / 13);
     text(
-      "URL",
-      width / 20 + width / 3,
+      "JOIN",
+      width / 20,
       height - height / 9,
-      width / 4,
+      width - width / 10,
       height / 13
     );
-    text(
-      "STOP",
-      width / 20 + (width / 3) * 2,
-      height - height / 9,
-      width / 4,
-      height / 13
-    );
-
-    if (
-      button(width / 20, height - height / 9, width / 4, height / 13) &&
-      mouseIsPressed &&
-      open
-    ) {
-      stage = "ADMIN";
-      setting = "RENAME SERVER";
-    }
-    if (
-      button(
-        width / 20 + width / 3,
-        height - height / 9,
-        width / 4,
-        height / 13
-      ) &&
-      mouseIsPressed &&
-      open
-    ) {
-      stage = "ADMIN";
-      setting = "ENTER URL";
-    }
-    if (
-      button(
-        width / 20 + (width / 3) * 2,
-        height - height / 9,
-        width / 4,
-        height / 13
-      ) &&
-      mouseIsPressed &&
-      open
-    ) {
-      stage = "ADMIN";
-      setting = "STOP SERVER";
-    }
-
-    if (!mouseIsPressed) {
-      open = true;
-    }
   }
-
   push();
   if (scroll > 0) {
     scroll = 0;
@@ -259,14 +210,17 @@ function showurls() {
     }
     for (let j = 0; j < servers.dates[i].length; j++) {
       message = servers.status[i][j];
-      if (message.indexOf("RENAME") > -1) {
-        stroke(0, 0, 200);
-      }
-      if (message.indexOf("START") > -1) {
-        stroke(0, 200, 0);
-      }
-      if (message.indexOf("STOP") > -1) {
-        stroke(200, 0, 0);
+      if (message.indexOf("RENAME") === -1) {
+        if (message.indexOf("START") > -1) {
+          stroke(0, 200, 0);
+          message = "STARTED AT";
+        }
+        if (message.indexOf("STOP") > -1) {
+          stroke(200, 0, 0);
+          message = "STOPPED AT";
+        }
+
+        server.info = message + " " + servers.dates[i][j];
       }
     }
     rect(width / 40, height / 5 + (i * height) / 6, width * 0.95, height / 7);
@@ -274,11 +228,19 @@ function showurls() {
     textAlign(LEFT, TOP);
     noStroke();
     fill(255);
-    textSize(s * 25);
+    textSize(s * 40);
     text(servers.names[i], width / 24, height / 4.7 + (i * height) / 6);
-    textSize(s * 15);
+    textAlign(LEFT, BOTTOM);
+    textSize(s * 20);
     fill(150);
-    text(servers.users[i], width / 24, height / 3.3 + (i * height) / 6);
+    if (width > height) {
+      text(servers.users[i], width / 24, height / 3 + (i * height) / 6);
+      textAlign(RIGHT, BOTTOM);
+      text(server.info, (width / 100) * 95, height / 3 + (i * height) / 6);
+    } else {
+      text(servers.users[i], width / 24, height / 3 + (i * height) / 6);
+      text(server.info, width / 24, height / 3.3 + (i * height) / 6);
+    }
 
     textSize(s * 22);
     fill(255);
@@ -296,57 +258,12 @@ function showurls() {
         height -
         height / 3.5 -
         (servers.dates[servers.users.indexOf(choosen)].length * height) / 20;
-    } else if (mouseIsPressed) {
-      choosen = {};
     }
   }
   pop();
   type.hide();
-
-  if (choosen.length > 1) {
-    fill(0, 0, 0, 240);
-    noStroke();
-    rect(width / 10, height / 10, width - width / 5, height - height / 4, 30);
-
-    textSize(s * 20);
-    textAlign(LEFT, TOP);
-    let message = "SERVER START";
-    for (
-      let i = 0;
-      i < servers.dates[servers.users.indexOf(choosen)].length;
-      i++
-    ) {
-      message = servers.status[servers.users.indexOf(choosen)][i];
-      if (message.indexOf("RENAME") > -1) {
-        fill(0, 0, 200);
-      }
-      if (message.indexOf("START") > -1) {
-        fill(0, 200, 0);
-      }
-      if (message.indexOf("STOP") > -1) {
-        fill(200, 0, 0);
-      }
-      text(message, width / 9, height / 9 + (i * height) / 20 + information);
-      text(
-        servers.dates[servers.users.indexOf(choosen)][i],
-        width / 3,
-        height / 9 + (i * height) / 20 + information
-      );
-    }
-
-    if (
-      information >
-      height -
-        height / 3.5 -
-        (servers.dates[servers.users.indexOf(choosen)].length * height) / 20
-    ) {
-      information =
-        height -
-        height / 3.5 -
-        (servers.dates[servers.users.indexOf(choosen)].length * height) / 20;
-    }
-  }
 }
+
 function button(x, y, w, h) {
   return mouseX > x && mouseY > y && mouseX < x + w && mouseY < y + h;
 }
@@ -356,8 +273,11 @@ let server = {
   stage: 0,
 };
 let incorrect = false;
-function create(setting) {
+function create() {
   background(17, 13, 29);
+
+  fill(255, 255, 255, 20);
+  rect(0, height / 6, width, height - height / 5);
 
   textAlign(CENTER, CENTER);
   textSize(s * 40);
@@ -371,19 +291,20 @@ function create(setting) {
   if (button(width / 40, height / 2, width - width / 20, height / 15)) {
     strokeWeight(10);
   }
-  rect(width / 40, height / 2, width - width / 20, height / 15, 10);
+  rect(width / 40, height / 2, width - width / 5, height / 15, 10);
 
+  strokeWeight(5);
   stroke(255, 0, 0);
-  rect(width / 2.4, (height / 5) * 4, width - width / 1.2, height / 15, 10);
+  rect(width / 20 + width - width / 5, height / 2, width / 8, height / 15, 10);
   noStroke();
 
-  textSize(s * 20);
+  textSize(s * 17);
   fill(255, 0, 0);
   text(
     "SUBMIT",
-    width / 2.4,
-    (height / 5) * 4,
-    width - width / 1.2,
+    width / 20 + width - width / 5,
+    height / 2,
+    width / 8,
     height / 15
   );
   if (incorrect) {
@@ -395,25 +316,23 @@ function create(setting) {
   }
 
   fill(255);
-
+  textAlign(LEFT, CENTER);
   if (type.value() === "") {
-    text(setting, width / 40, height / 2, width - width / 20, height / 15, 10);
+    text(setting, width / 20, height / 2, width - width / 20, height / 15);
   } else {
-    text(
-      type.value(),
-      width / 40,
-      height / 2,
-      width - width / 20,
-      height / 15,
-      10
-    );
+    text(type.value(), width / 20, height / 2, width - width / 20, height / 15);
   }
 
   type.show();
 
   if (
     key === "Enter" ||
-    (button(width / 2.4, (height / 5) * 4, width - width / 1.2, height / 15) &&
+    (button(
+      width / 20 + width - width / 5,
+      height / 2,
+      width / 8,
+      height / 15
+    ) &&
       mouseIsPressed)
   ) {
     if (
@@ -428,10 +347,71 @@ function create(setting) {
           "|" +
           type.value()
       );
-      type.value("");
       stage = "INFO";
     } else {
       incorrect = true;
+    }
+  }
+
+  fill(0);
+  rect(0, (height / 10) * 8, width, height);
+
+  fill(70);
+  stroke(100, 255, 100);
+  strokeWeight(5);
+  rect(width / 20, height - height / 9, width / 4, height / 13);
+  stroke(150, 150, 255);
+  rect(width / 20 + width / 3, height - height / 9, width / 4, height / 13);
+  stroke(255, 100, 100);
+  rect(
+    width / 20 + (width / 3) * 2,
+    height - height / 9,
+    width / 4,
+    height / 13
+  );
+
+  noStroke();
+  textSize(s * 20);
+  fill(255);
+  textAlign(CENTER, CENTER);
+  text("NAME", width / 20, height - height / 9, width / 4, height / 13);
+  text(
+    "URL",
+    width / 20 + width / 3,
+    height - height / 9,
+    width / 4,
+    height / 13
+  );
+  text(
+    "STOP",
+    width / 20 + (width / 3) * 2,
+    height - height / 9,
+    width / 4,
+    height / 13
+  );
+  if (mouseIsPressed) {
+    if (button(width / 20, height - height / 9, width / 4, height / 13)) {
+      setting = "RENAME SERVER";
+    }
+    if (
+      button(
+        width / 20 + width / 3,
+        height - height / 9,
+        width / 4,
+        height / 13
+      )
+    ) {
+      setting = "ENTER URL";
+    }
+    if (
+      button(
+        width / 20 + (width / 3) * 2,
+        height - height / 9,
+        width / 4,
+        height / 13
+      )
+    ) {
+      setting = "STOP SERVER";
     }
   }
 }
@@ -443,9 +423,33 @@ function draw() {
     showurls();
   }
   if (stage === "ADMIN") {
-    create(setting);
+    create();
   }
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(s * 20);
+  text("ADMIN CONTROLS", (width / 4) * 3, height / 10);
+  text("MULTIPLAYER SERVERS", width / 4, height / 10);
 
+  if (stage === "INFO") {
+    text("______________", width / 4, height / 9.5);
+
+    if (
+      dist(mouseX, mouseY, (width / 4) * 3, height / 9.5) < s * 100 &&
+      mouseIsPressed
+    ) {
+      stage = "ADMIN";
+    }
+  }
+  if (stage === "ADMIN") {
+    text("__________", (width / 4) * 3, height / 9.5);
+    if (
+      dist(mouseX, mouseY, width / 4, height / 9.5) < s * 100 &&
+      mouseIsPressed
+    ) {
+      stage = "INFO";
+    }
+  }
   if (mouseIsPressed) {
     hold++;
   } else {
