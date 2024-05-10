@@ -302,8 +302,8 @@ function showurls() {
       text(message+"\t\t-\t\t"+servers.dates[servers.users.indexOf(choosen)][i],width/9,height/9+i*height/20+information);
     }
     
-    if (information<0){
-      information=0;
+    if (information>height-height/4-servers.dates[servers.users.indexOf(choosen)].length*height/20){
+      information=height-height/4-servers.dates[servers.users.indexOf(choosen)].length*height/20;
     }
   }
 }
