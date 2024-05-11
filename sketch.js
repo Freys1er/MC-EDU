@@ -19,8 +19,8 @@ function setup() {
   data = data.getArray();
 
   type = createInput();
-  type.size(width - 10, height - 10);
-  type.position(0, 0);
+  type.size(width - width / 20, height / 15);
+  type.position(width / 40, height / 2, width - width / 20, height / 15);
   type.style("background-color", color(0, 0, 0, 0));
   type.style("border-color", color(0, 0, 0, 0));
   type.style("color", color(0, 0, 0, 0));
@@ -90,8 +90,8 @@ function setup() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 
-  type.size(width - 10, height - 10);
-  type.position(0, 0);
+  type.size(width - width / 20, height / 15);
+  type.position(width / 40, height / 2, width - width / 20, height / 15);
   type.style("background-color", color(0, 0, 0, 0));
   type.style("border-color", color(0, 0, 0, 0));
   type.style("color", color(0, 0, 0, 0));
@@ -228,7 +228,7 @@ function showurls() {
     textAlign(LEFT, TOP);
     noStroke();
     fill(255);
-    textSize(s * 40);
+    textSize(s * 30);
     text(servers.names[i], width / 24, height / 4.7 + (i * height) / 6);
     textAlign(LEFT, BOTTOM);
     textSize(s * 20);
@@ -258,6 +258,8 @@ function showurls() {
         height -
         height / 3.5 -
         (servers.dates[servers.users.indexOf(choosen)].length * height) / 20;
+    }else if (mouseIsPressed && mouseY<height/3*2){
+      choosen = "";
     }
   }
   pop();
@@ -416,6 +418,12 @@ function create() {
   }
 }
 
+function view(){
+  
+  
+  
+}
+
 let stage = "INFO";
 function draw() {
   textFont(font);
@@ -425,34 +433,38 @@ function draw() {
   if (stage === "ADMIN") {
     create();
   }
+  if (stage === "VIEW"){
+    view();
+  }
   fill(255);
   textAlign(CENTER, CENTER);
   textSize(s * 20);
-  text("ADMIN CONTROLS", (width / 4) * 3, height / 10);
-  text("MULTIPLAYER SERVERS", width / 4, height / 10);
 
   if (stage === "INFO") {
-    text("______________", width / 4, height / 9.5);
+    text("MULTIPLAYER SERVERS", width / 2, height / 10);
 
     if (
-      dist(mouseX, mouseY, (width / 4) * 3, height / 9.5) < s * 100 &&
-      mouseIsPressed
+      button(width/4,height/11,width/2,height/20) &&
+      mouseIsPressed && open
     ) {
       stage = "ADMIN";
+      open = false;
     }
   }
   if (stage === "ADMIN") {
-    text("__________", (width / 4) * 3, height / 9.5);
+    text("ADMIN CONTROLS", width / 2, height / 10);
     if (
-      dist(mouseX, mouseY, width / 4, height / 9.5) < s * 100 &&
-      mouseIsPressed
+      button(width/4,height/11,width/2,height/20) &&
+      mouseIsPressed && open
     ) {
       stage = "INFO";
+      open = false;
     }
   }
   if (mouseIsPressed) {
     hold++;
   } else {
     hold = 0;
+    open = true;
   }
 }
