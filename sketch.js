@@ -33,6 +33,7 @@ function setup() {
     users: [],
     dates: [],
     status: [],
+    reasons:[]
   };
 
   for (let i = 0; i < data.length; i++) {
@@ -45,10 +46,12 @@ function setup() {
 
     if (row.mode === "RENAME SERVER") {
       if (servers.users.indexOf(row.user) > -1) {
+        servers.reasons[servers.users.indexOf(row.user)].push("");
         servers.names[servers.users.indexOf(row.user)] = row.info;
         servers.dates[servers.users.indexOf(row.user)].push([row.date]);
         servers.status[servers.users.indexOf(row.user)].push(["RENAME"]);
       } else {
+        servers.reasons.push([]);
         servers.names.push(row.info);
         servers.urls.push("");
         servers.users.push(row.user);
@@ -58,10 +61,12 @@ function setup() {
     }
     if (row.mode === "ENTER URL") {
       if (servers.users.indexOf(row.user) > -1) {
+        servers.reasons[servers.users.indexOf(row.user)].push("");
         servers.urls[servers.users.indexOf(row.user)] = row.info;
         servers.dates[servers.users.indexOf(row.user)].push(row.date);
         servers.status[servers.users.indexOf(row.user)].push(["START"]);
       } else {
+        servers.reasons.push([]);
         servers.names.push("");
         servers.urls.push(row.url);
         servers.users.push(row.user);
@@ -71,9 +76,11 @@ function setup() {
     }
     if (row.mode === "STOP SERVER") {
       if (servers.users.indexOf(row.user) > -1) {
+        servers.reasons[servers.users.indexOf(row.user)].push(row.info);
         servers.dates[servers.users.indexOf(row.user)].push(row.date);
         servers.status[servers.users.indexOf(row.user)].push(["STOP"]);
       } else {
+        servers.reasons.push([raw.info]);
         servers.names.push("");
         servers.urls.push(row.url);
         servers.users.push(row.user);
@@ -237,6 +244,7 @@ function showurls() {
       text(servers.users[i], width / 24, height / 3 + (i * height) / 6);
       textAlign(RIGHT, BOTTOM);
       text(server.info, (width / 100) * 95, height / 3 + (i * height) / 6);
+      text(servers.reasons[i][servers.reasons.length], width / 100*95, height / 3.8 + (i * height) / 6);
     } else {
       text(servers.users[i], width / 24, height / 3 + (i * height) / 6);
       text(server.info, width / 24, height / 3.3 + (i * height) / 6);
@@ -264,6 +272,10 @@ function showurls() {
   }
   pop();
   type.hide();
+  
+  if (choosen.length>1){
+    
+  }
 }
 
 function button(x, y, w, h) {
@@ -311,10 +323,6 @@ function create() {
   );
   if (incorrect) {
     text("Invalid URL, please try again", width / 2, height / 5);
-  }
-
-  if (setting === "STOP SERVER") {
-    type.value("");
   }
 
   fill(255);
